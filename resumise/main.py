@@ -3,100 +3,123 @@ import requests
 import google.generativeai as genai
 import PyPDF2
 from bs4 import BeautifulSoup
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from sentence_transformers import SentenceTransformer, util
 
 # 1. Uygulama ve Model Başlatma
-app = FastAPI(title="Resumise AI Engine")
+app = FastAPI(
+    title="Resumise AI Engine",
+    description="Semantik CV Analizi ve Kariyer Koçluğu API Servisi",
+    version="1.1.0"
+)
 
-# NLP Modeli (Anlamsal analiz için)
-model = SentenceTransformer('all-MiniLM-L6-v2')
+# Semantic-Search Modeli
+embed_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# Gemini Yapay Zeka Ayarları
-GEMINI_API_KEY = "AIzaSyAEXYL5rCHkuTXponb9eQ_RxU1k9vUF6IM" # Sunum sonrası bunu gizli tutmalısın
+# Gemini Yapay Zeka Ayarları 
+# NOT: Güvenlik için daha sonra .env'ye geçebiliriz, ama şu an çalışması için buraya ekliyoruz.
+GEMINI_API_KEY = "AIzaSyAEXYL5rCHkuTXponb9eQ_RxU1k9vUF6IM" 
 genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+gemini_model = genai.GenerativeModel('gemini-flash-latest')
 
 # 2. Yardımcı Fonksiyonlar
+
 def linkten_metin_cek(url: str):
-    """Verilen linkteki web sayfasından metin içeriğini temizleyerek çeker."""
+    """Linkteki iş ilanı içeriğini temizleyerek çeker."""
     try:
         headers = {'User-Agent': 'Mozilla/5.0'}
-        yanit = requests.get(url, headers=headers, timeout=10)
-        soup = BeautifulSoup(yanit.text, 'html.parser')
+        yanit = requests.get(url, headers=headers, timeout=15)
+        yanit.raise_for_status()
         
-        # Gereksiz etiketleri (script, style) temizle
-        for script in soup(["script", "style"]):
-            script.extract()
+        soup = BeautifulSoup(yanit.text, 'html.parser')
+        for element in soup(["script", "style", "nav", "footer", "header"]):
+            element.decompose()
             
-        metin = soup.get_text()
-        # Satır aralarındaki gereksiz boşlukları temizle
-        satirlar = (line.strip() for line in metin.splitlines())
-        temiz_metin = '\n'.join(chunk for chunk in satirlar if chunk)
-        return temiz_metin
+        metin = soup.get_text(separator=' ')
+        temiz_metin = ' '.join(metin.split())
+        return temiz_metin if len(temiz_metin) > 100 else "İş ilanı içeriği kazınamadı."
     except Exception as e:
-        return f"Link okuma hatası: {e}"
+        return f"Hata: İş ilanı okunamadı. ({str(e)})"
 
 def pdf_metin_ayikla(pdf_bytes: bytes):
-    """Yüklenen PDF dosyasının içeriğini metne dönüştürür."""
-    pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
-    metin = ""
-    for page in pdf_reader.pages:
-        metin += page.extract_text()
-    return metin
+    """CV PDF dosyasını metne dönüştürür (PyPDF2 Kullanarak)."""
+    try:
+        pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
+        metin = ""
+        for page in pdf_reader.pages:
+            sayfa_metni = page.extract_text()
+            if sayfa_metni:
+                metin += sayfa_metni + "\n"
+        
+        if not metin.strip():
+            raise ValueError("PDF'den metin okunamadı.")
+            
+        return metin
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"PDF Okuma Hatası: {str(e)}")
 
 # 3. API Uç Noktaları (Endpoints)
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Resumise AI Engine is Running!",
+        "status": "online",
+        "documentation": "/docs"
+    }
+
 @app.post("/analyze-link")
 async def analyze_with_link(cv_file: UploadFile = File(...), job_url: str = Form(...)):
-    """CV ve Link üzerinden eşleştirme skoru hesaplar."""
-    # CV Metnini al
+    """CV ve Link üzerinden Semantik Skorlama yapar."""
     pdf_content = await cv_file.read()
     cv_text = pdf_metin_ayikla(pdf_content)
     
-    # İş İlanı Metnini linkten çek
     job_description = linkten_metin_cek(job_url)
+    if job_description.startswith("Hata:"):
+        return {"status": "error", "message": job_description}
     
-    # NLP Skorlama (Cosine Similarity)
-    cv_vector = model.encode(cv_text, convert_to_tensor=True)
-    job_vector = model.encode(job_description, convert_to_tensor=True)
+    cv_vector = embed_model.encode(cv_text, convert_to_tensor=True)
+    job_vector = embed_model.encode(job_description, convert_to_tensor=True)
+    
     score = round(float(util.pytorch_cos_sim(cv_vector, job_vector)) * 100, 2)
+    score = max(0, score)
     
     return {
         "status": "success",
-        "score": score,
-        "job_preview": job_description[:200] + "..."
+        "data": {
+            "score": score,
+            "job_summary": job_description[:300] + "..."
+        }
     }
 
 @app.post("/get-advice")
 async def get_ai_advice(cv_file: UploadFile = File(...), job_description: str = Form(...)):
-    """Gemini API kullanarak kariyer tavsiyesi ve mülakat soruları üretir."""
+    """Gemini Kariyer Koçu: Tavsiyeler sunar."""
     pdf_content = await cv_file.read()
     cv_text = pdf_metin_ayikla(pdf_content)
     
     prompt = f"""
-    Sen profesyonel bir İK uzmanı ve kariyer koçusun. 
-    Aşağıdaki CV'yi ve iş ilanını analiz et:
-    
-    CV: {cv_text}
+    Sen profesyonel bir İK Direktörü ve Kariyer Koçusun. 
+    Aday CV'si: {cv_text}
     İş İlanı: {job_description}
     
-    Senden şunları istiyorum:
-    1. Bu aday bu işe neden uygun veya neden değil? (Kısa özet)
-    2. CV'de değiştirilmesi veya eklenmesi gereken 3 kritik şey nedir?
-    3. Bu iş görüşmesinde adaya sorulabilecek 3 adet teknik mülakat sorusu ve ideal cevapları nedir?
-    
-    Lütfen yanıtını profesyonel ve motive edici bir dille, Türkçe olarak ver.
+    Lütfen şunları Türkçe olarak analiz et:
+    1. Adayın güçlü yanları.
+    2. Eksik yetenekler (Skill Gap).
+    3. CV için 3 kritik öneri.
+    4. 2 adet mülakat sorusu ve cevabı.
     """
     
-    response = gemini_model.generate_content(prompt)
-    
-    return {
-        "status": "success",
-        "ai_advice": response.text
-    }
+    try:
+        response = gemini_model.generate_content(prompt)
+        return {
+            "status": "success",
+            "ai_advice": response.text
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"AI Hatası: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
-    # Uygulamayı 8000 portunda başlat
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
