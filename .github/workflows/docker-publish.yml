@@ -34,7 +34,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # Burayı Muhammet'in formatına uydurduk ama ismini AI Engine yaptık
           images: ghcr.io/${{ github.repository_owner }}/resumise-ai-engine
           tags: |
             type=raw,value=latest
@@ -43,10 +42,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          # ÖNEMLİ: Eğer projenin Dockerfile'ı 'resumise' klasöründeyse burayı './resumise' yap.
-          # Eğer ana dizindeyse '.' olarak kalsın.
-          context: .
-          file: ./Dockerfile
+          # ÖNEMLİ: Dosyaların 'resumise' klasöründe olduğunu belirttik
+          context: ./resumise
+          file: ./resumise/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
