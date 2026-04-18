@@ -94,7 +94,7 @@ async def analyze_with_link(cv_file: UploadFile = File(...), job_url: str = Form
 
 @app.post("/get-advice")
 async def get_ai_advice(cv_file: UploadFile = File(...), job_description: str = Form(...)):
-    """Gemini Kariyer Koçu: Tavsiyeler sunar."""
+    """Gemini Kariyer Koçu: Analizi bölümlere ayrılmış (JSON) şekilde sunar."""
     pdf_content = await cv_file.read()
     cv_text = pdf_metin_ayikla(pdf_content)
     
@@ -103,21 +103,34 @@ async def get_ai_advice(cv_file: UploadFile = File(...), job_description: str = 
     Aday CV'si: {cv_text}
     İş İlanı: {job_description}
     
-    Lütfen şunları Türkçe olarak analiz et:
-    1. Adayın güçlü yanları.
-    2. Eksik yetenekler (Skill Gap).
-    3. CV için 3 kritik öneri.
-    4. 2 adet mülakat sorusu ve cevabı.
+    Analizini tam olarak şu JSON yapısında vermelisin:
+    {{
+        "strengths": "Adayın güçlü yanlarını anlatan paragraf",
+        "skill_gap": "İş ilanında olup CV'de eksik olan yeteneklerin listesi/analizi",
+        "cv_suggestions": "CV'yi bu işe özel iyileştirmek için 3 somut öneri",
+        "interview_prep": "Bu işe özel 2 teknik mülakat sorusu ve ideal cevap stratejisi"
+    }}
+    
+    Dil tamamen Türkçe ve profesyonel olmalıdır.
     """
     
     try:
-        response = gemini_model.generate_content(prompt)
+        # JSON formatında yanıt almak için generation_config ekliyoruz
+        response = gemini_model.generate_content(
+            prompt, 
+            generation_config={"response_mime_type": "application/json"}
+        )
+        
+        # Gelen metni Python sözlüğüne çeviriyoruz
+        import json
+        structured_data = json.loads(response.text)
+        
         return {
             "status": "success",
-            "ai_advice": response.text
+            "data": structured_data
         }
     except Exception as e:
-        return {"status": "error", "message": f"AI Hatası: {str(e)}"}
+        return {"status": "error", "message": f"AI Analiz Hatası: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
