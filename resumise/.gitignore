@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# PDF Test Files (Opsiyonel: Eğer test dosyalarının gitmesini istemiyorsan)
+*.pdf
+
+# IDE
+.vscode/
+.idea/

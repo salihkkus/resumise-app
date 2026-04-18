@@ -1,10 +1,18 @@
 import io
+import os
 import requests
 import google.generativeai as genai
 import PyPDF2
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from sentence_transformers import SentenceTransformer, util
+
+# .env desteği için korumalı yükleme
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # 1. Uygulama ve Model Başlatma
 app = FastAPI(
@@ -17,10 +25,14 @@ app = FastAPI(
 embed_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Gemini Yapay Zeka Ayarları 
-# NOT: Güvenlik için daha sonra .env'ye geçebiliriz, ama şu an çalışması için buraya ekliyoruz.
-GEMINI_API_KEY = "AIzaSyAEXYL5rCHkuTXponb9eQ_RxU1k9vUF6IM" 
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel('gemini-flash-latest')
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
+
+if not GEMINI_API_KEY:
+    # Eğer .env yoksa veya anahtar bulunamadıysa uyarı ver ama çökme
+    print("⚠️ UYARI: GEMINI_API_KEY bulunamadı! Lütfen .env dosyasını kontrol edin.")
+else:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel('gemini-flash-latest')
 
 # 2. Yardımcı Fonksiyonlar
 
@@ -135,4 +147,4 @@ async def get_ai_advice(cv_file: UploadFile = File(...), job_description: str = 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
+
