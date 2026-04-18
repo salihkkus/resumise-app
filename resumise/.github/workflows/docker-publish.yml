@@ -30,12 +30,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Lowercase repo name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Extract image metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # Burayı Muhammet'in formatına uydurduk ama ismini AI Engine yaptık
-          images: ghcr.io/${{ github.repository_owner }}/resumise-ai-engine
+          images: ghcr.io/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
             type=sha
@@ -43,8 +46,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          # ÖNEMLİ: Eğer projenin Dockerfile'ı 'resumise' klasöründeyse burayı './resumise' yap.
-          # Eğer ana dizindeyse '.' olarak kalsın.
           context: .
           file: ./Dockerfile
           push: true
