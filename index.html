@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Resumise - Kariyer Mimarı</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#b2c5ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9fb",
+                        "surface-container-highest": "#e1e2e4",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-primary-fixed": "#001848",
+                        "primary-container": "#0052cc",
+                        "on-tertiary-container": "#ffc6b2",
+                        "on-secondary-fixed": "#021945",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c3c6d6",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#f0f1f3",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#b4c5fb",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9fb",
+                        "on-surface-variant": "#434654",
+                        "surface": "#f8f9fb",
+                        "secondary-container": "#b6c8fe",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dae2ff",
+                        "surface-container": "#edeef0",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-tertiary-fixed": "#380d00",
+                        "primary": "#003d9b",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "tertiary": "#7b2600",
+                        "surface-dim": "#d9dadc",
+                        "outline": "#737685",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dae2ff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#c4d2ff",
+                        "secondary": "#4c5d8d",
+                        "on-secondary-container": "#415382",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e1e2e4",
+                        "surface-container-low": "#f3f4f6",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#a33500",
+                        "surface-container-high": "#e7e8ea",
+                        "on-secondary-fixed-variant": "#344573",
+                        "surface-tint": "#0c56d0",
+                        "tertiary-fixed": "#ffdbcf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(195, 198, 214, 0.15);
+        }
+        .bg-mesh {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 82, 204, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(178, 197, 255, 0.1) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Top Navigation Anchor -->
+<header class="bg-[#f8f9fb] dark:bg-gray-950 flex justify-between items-center px-8 h-20 w-full max-w-7xl mx-auto top-0 sticky z-50">
+<div class="text-2xl font-bold text-[#191c1e] dark:text-white font-['Manrope'] tracking-tight">Resumise</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-[#191c1e] dark:text-gray-400 font-medium font-['Manrope'] tracking-tight hover:text-[#003d9b] dark:hover:text-blue-300 transition-colors" href="#">Platform</a>
+<a class="text-[#191c1e] dark:text-gray-400 font-medium font-['Manrope'] tracking-tight hover:text-[#003d9b] dark:hover:text-blue-300 transition-colors" href="#">Templates</a>
+<a class="text-[#191c1e] dark:text-gray-400 font-medium font-['Manrope'] tracking-tight hover:text-[#003d9b] dark:hover:text-blue-300 transition-colors" href="#">Pricing</a>
+<a class="text-[#191c1e] dark:text-gray-400 font-medium font-['Manrope'] tracking-tight hover:text-[#003d9b] dark:hover:text-blue-300 transition-colors" href="#">About</a>
+</nav>
+<div class="flex gap-4 items-center">
+<button class="text-[#191c1e] dark:text-gray-400 font-medium font-['Manrope'] tracking-tight">Login</button>
+<button class="bg-primary-container text-white px-6 py-2.5 rounded-full font-bold hover:scale-95 duration-150 transition-all">Get Started</button>
+</div>
+</header>
+<main class="relative min-h-[800px] flex items-center justify-center py-20 px-4 md:px-12 bg-mesh">
+<!-- Abstract Background Elements -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute top-20 left-10 w-96 h-96 bg-primary-fixed opacity-20 blur-[100px] rounded-full"></div>
+<div class="absolute bottom-20 right-10 w-[500px] h-[500px] bg-secondary-fixed opacity-10 blur-[120px] rounded-full"></div>
+<img class="absolute top-0 right-0 w-full h-full object-cover mix-blend-multiply opacity-5" data-alt="Abstract 3D neural network lines in a high-tech corporate blue and white style, minimal and elegant with soft depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlqk7GJKieqtML7OeZ1xz2FEWyncGv7TgwABiaC1gKpkTaqEUWV_mRE-fKPpSC5NQoTe1GzkvUFwJMTob55DfHl0Z3tJV7a91hmRHihx1qUJXq11yJZI2os3bJhTYbjF0ONKEPkGXJgQ_mC_P-IgCr5BCmi4DoEH1QcOcX_v892K-P04N3dfEbJGvaBLWsU2Z9lSVvp9n6yMSj66y0Ub9QCGKciDexDdQeV9LKd7CC_UM9mtV4PhSF5ku3tMRdxV84q0neFJakYN4"/>
+</div>
+<div class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10 items-center">
+<!-- Left Content Area -->
+<div class="lg:col-span-6 space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-full border border-outline-variant/15">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant font-display">AI Geliştirilmiş Kariyer Platformu</span>
+</div>
+<div class="space-y-4">
+<h1 class="text-6xl md:text-8xl font-extrabold font-display tracking-tighter text-on-surface leading-[0.95]">
+                        Resumise
+                    </h1>
+<h2 class="text-3xl md:text-5xl font-bold font-display text-primary tracking-tight">
+                        Kariyer Mimarı
+                    </h2>
+</div>
+<p class="text-xl md:text-2xl font-body text-on-surface-variant leading-relaxed max-w-xl">
+                    Yapay Zeka ile <span class="text-on-surface font-semibold">CV Analizi</span> ve <span class="text-on-surface font-semibold">Kariyer Yol Haritası</span> ile profesyonel geleceğinizi bugünden inşa edin.
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-primary/20 hover:scale-95 transition-transform">
+                        Hemen Analiz Et
+                    </button>
+<button class="bg-surface-container-high text-on-secondary-container px-8 py-4 rounded-full font-bold text-lg hover:bg-surface-container-highest transition-colors">
+                        Yol Haritasını Keşfet
+                    </button>
+</div>
+<div class="flex items-center gap-6 pt-8 border-t border-outline-variant/20">
+<div class="flex flex-col">
+<span class="text-3xl font-extrabold text-on-surface font-display">1M+</span>
+<span class="text-sm text-on-surface-variant font-medium">Analiz Edilen CV</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="text-3xl font-extrabold text-on-surface font-display">%95</span>
+<span class="text-sm text-on-surface-variant font-medium">Başarı Oranı</span>
+</div>
+</div>
+</div>
+<!-- Right Visual Content (Bento Style Layout) -->
+<div class="lg:col-span-6 relative h-[600px] w-full hidden md:block">
+<!-- Main Dashboard Snippet -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md glass-panel p-6 rounded-[2rem] shadow-2xl z-20">
+<div class="flex justify-between items-center mb-6">
+<div class="space-y-1">
+<h4 class="font-bold text-lg">ATS Skor Analizi</h4>
+<p class="text-xs text-on-surface-variant">Pazarlama Müdürü Pozisyonu İçin</p>
+</div>
+<div class="w-16 h-16 rounded-full border-4 border-primary border-t-transparent flex items-center justify-center">
+<span class="text-lg font-extrabold text-primary">95</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%]"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl">
+<span class="block text-xs text-on-surface-variant mb-1">Anahtar Kelimeler</span>
+<span class="font-bold text-primary">Mükemmel</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl">
+<span class="block text-xs text-on-surface-variant mb-1">Okunabilirlik</span>
+<span class="font-bold text-primary">Yüksek</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating AI Insight Card -->
+<div class="absolute top-10 right-4 w-64 glass-panel p-4 rounded-2xl shadow-xl z-30 border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<span class="font-bold text-sm">AI Önerisi</span>
+</div>
+<p class="text-xs leading-relaxed text-on-surface-variant">
+                        "Liderlik" yerine "Stratejik Yönetim" kelimesini kullanmanız başarı şansınızı %12 artıracaktır.
+                    </p>
+</div>
+<!-- Career Roadmap Node -->
+<div class="absolute bottom-10 left-4 w-72 glass-panel p-5 rounded-2xl shadow-xl z-30">
+<h5 class="text-sm font-bold mb-4">Kariyer Yol Haritası</h5>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary-fixed"></div>
+<span class="text-xs font-semibold">CV Optimizasyonu</span>
+</div>
+<div class="flex items-center gap-4 opacity-50">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="text-xs">LinkedIn Profili Geliştirme</span>
+</div>
+<div class="flex items-center gap-4 opacity-50">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="text-xs">Mülakat Simülasyonu</span>
+</div>
+</div>
+</div>
+<!-- Background Abstract 3D Icons -->
+<div class="absolute -top-10 left-10 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[120px] text-primary" style="font-variation-settings: 'wght' 100;">description</span>
+</div>
+<div class="absolute -bottom-10 right-10 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[120px] text-primary" style="font-variation-settings: 'wght' 100;">trending_up</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Content Sections: High-End Bento Grid -->
+<section class="max-w-7xl mx-auto px-8 py-24">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface-container-low p-10 rounded-[2.5rem] flex flex-col justify-between h-[400px] hover:bg-surface-container-lowest transition-all group">
+<div class="w-14 h-14 bg-primary-container text-white rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div class="space-y-4">
+<h3 class="text-2xl font-bold font-display">Derin CV Analizi</h3>
+<p class="text-on-surface-variant font-body">Saniyeler içinde CV'nizi 150+ farklı kriterde analiz ederek eksiklerinizi belirleyin.</p>
+</div>
+</div>
+<!-- Card 2 (Large Column) -->
+<div class="md:col-span-1 bg-surface-container-low p-10 rounded-[2.5rem] flex flex-col justify-between h-[400px] hover:bg-surface-container-lowest transition-all">
+<div class="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">route</span>
+</div>
+<div class="space-y-4">
+<h3 class="text-2xl font-bold font-display">Kişiselleştirilmiş Rota</h3>
+<p class="text-on-surface-variant font-body">Hedeflediğiniz pozisyon için hangi yetkinliklere ihtiyacınız olduğunu öğrenin.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-primary text-white p-10 rounded-[2.5rem] flex flex-col justify-between h-[400px] shadow-2xl shadow-primary/30">
+<div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="space-y-4">
+<h3 class="text-2xl font-bold font-display">AI Yazım Desteği</h3>
+<p class="text-on-primary-container font-body">Güçlü cümleler ve profesyonel ifadeler için yapay zeka asistanınız her zaman hazır.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-[#f3f4f6] dark:bg-gray-900 border-t border-[#c3c6d6]/15">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 w-full max-w-7xl mx-auto">
+<div class="mb-8 md:mb-0 space-y-2">
+<div class="text-lg font-bold text-[#191c1e] dark:text-white font-['Manrope'] tracking-tight">Resumise</div>
+<p class="text-gray-500 dark:text-gray-400 font-['Inter'] text-sm">© 2024 Resumise AI. Kariyer Mimarı.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-gray-500 dark:text-gray-400 font-['Inter'] text-sm hover:text-[#191c1e] dark:hover:text-white transition-all" href="#">Privacy Policy</a>
+<a class="text-gray-500 dark:text-gray-400 font-['Inter'] text-sm hover:text-[#191c1e] dark:hover:text-white transition-all" href="#">Terms of Service</a>
+<a class="text-gray-500 dark:text-gray-400 font-['Inter'] text-sm hover:text-[#191c1e] dark:hover:text-white transition-all" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>
